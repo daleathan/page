@@ -1,0 +1,1 @@
+wish.exe c:\page\page.tcl %1

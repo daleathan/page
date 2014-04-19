@@ -2,7 +2,6 @@ Introduction
 =========================
 
 
-
 PAGE is a tool which helps to create Tkinter GUI interfaces for use within Python programs.  It is a rework or extension of the program Visual Tcl (Vtcl) so that Vtcl now produces Python code. Faced with the problem of building an application driven by a single GUI window, PAGE will facilitate designing the GUI and building a working skeletal Python program emphasizing the ttk widgets. As other windows are required, they are designed with PAGE and incorporated into the application by importing the generated python module.
 
 
@@ -53,3 +52,7 @@ The 4.2 release contains changes which facilitate rework.  This involves importa
 
 
 The 4.2.1 release contains bug fixes.
+
+The 4.2.2. release adds a Help menu to the main menu and can open the html documentation in the default browser.  This has been tested with several browser but not a recent version of Internet Explorer.  Also, some window titles have been cleaned up.
+
+The 4.2.3 release corrects the bugs with saving files and makes that process more regular.

@@ -59,10 +59,20 @@ Visual Tcl interface.  It was modified because some of the original
 facilities and features of Visual Tcl are inappropriate for PAGE or
 because the Visual Tcl documentation is in such a sad state that I do
 not understand them.</p>
+<p>When PAGE is execute without an existing .pagerc file, which is the
+situation when PAGE is first installed, a number of windows are spread
+across the screen in what may appear as random locations and sizes. I
+have arranged them at the corners and the edges so that they will be
+out of the way of the GUI you are building.  They
+should then be resized and moved to more desirable locations.  Follow
+such placement with Windows-&gt;Save Window Locations or File-&gt;Quit and
+the geometry of the windows will be saved and used when PAGE is next
+invoked.</p>
 <p>Many PAGE parameters are are saved from one invocation of PAGE to the
 next in the file &#8220;HOME/.pagerc&#8221;. Included are the preferences and the
 geometry (size and location) of the various windows in the page
-interface.</p>
+interface as described above. This file is created when the user does
+a quit.</p>
 <p>Start PAGE by executing &#8216;page&#8217; on Linux, winpage.bat in a DOS window,
 or activating the PAGE icon on the Windows desktop. The page and
 winpage.bat scripts may specify a filename. If the filename includes
@@ -73,6 +83,9 @@ final &#8221;.&#8221;, the extension &#8221;.tcl&#8221; will be appended to the 
 default scheme of black on gray. So for my personal use I made the
 fonts larger and wanted the background color Wheat. See the section on
 <a class="reference internal" href="preferences.html#preferences"><em>Defaults and Preferences</em></a>.</p>
+<p>PAGE may be terminated with File-&gt;Quit which cleanly stops execution
+while saving preferences and window geometry; Control-C and Control-Q
+also quit PAGE.</p>
 <div class="section" id="menus">
 <h2>Menus<a class="headerlink" href="#menus" title="Permalink to this headline">¶</a></h2>
 <p>The main menu of PAGE contains some of the usual stuff and there is
@@ -81,13 +94,16 @@ several PAGE windows which popup for various functions and the user
 can relocate them and change their sizes with the mouse.  The Save
 Window Locations item in the Window menu saves the current locations
 for future invocations of PAGE.</p>
-<p>The Option menu has the item &#8220;Hide&#8221; which &#8220;Withdraws a widget from
-display&#8221;. Again, I have never used it. The other items are self
-explanatory.</p>
 <p>The Widget menu is dynamic depending on the widget selected. Commonly,
 it allows the invocation of things like the Menu editor, or Page
 editor for the TNotebook widget.</p>
-<p>Finally, the Gen_Python menu creates the Python code for the GUI.</p>
+<p>The Gen_Python menu creates the Python code for the GUI module as well
+as the supporting module.</p>
+<p>Finally, the Help menu opens an About window containing some
+information about PAGE and can open the html version of the this
+documentation in the default browser. This has been tested in Linux
+with Firefox and Chrome, in OSX with Firefox and Safari, and XP with
+Firefox (I don&#8217;t have a reasonable version of IE).</p>
 <p>Let me emphasize that PAGE will contain bugs. So be sure to save
 often. That is the purpose of the save commands in the File menu.</p>
 <p>When PAGE starts for the first time, it throws up upon the screen a
@@ -213,9 +229,10 @@ page. Please see the section on         <a class="reference internal" href="pref
 </div>
 <div class="section" id="python-console">
 <h2>Python Console<a class="headerlink" href="#python-console" title="Permalink to this headline">¶</a></h2>
-<p>When the user generates the python module as described above the
-Python console window appears with the generated code inside the upper
-text box. It has the following appearance:</p>
+<p>When the user generates Python for either the GUI module or the
+support module as described above, the Python Console window appears
+with the generated code inside the upper text box. It has the
+following appearance:</p>
 <img alt="_images/console.jpg" src="_images/console.jpg" />
 <p>The upper text box contains the generated text with a bit of
 colorization applied. The lower text box contains any generated output
@@ -225,19 +242,23 @@ text boxes.</p>
 <p>To execute the generated Python module, just click on the Run button
 of the &#8216;Python console&#8217;.  Unless you have written the necessary
 functions not much will happen other than providing a preview of the
-GUI. In version 3.5, I have modified the skeletal function that are
-generated automatically for callbacks to print the function name in
-the Execution Output window using the Print function.  On Linux or OS
-X the function name will appear immediately; on Windows, when
-execution is terminated.  The Print function works fine for Python 2.7
-or 3.x. See the penultimate paragraph of this section which discusses
-this more.</p>
+GUI. The skeletal functions that are generated automatically for
+callbacks print the function name in the Execution Output window using
+the Print function.  On Linux or OS X the function name will appear
+immediately in the execution window; on Windows, when execution is
+terminated.  The Print function works fine for Python 2.7 or 3.x. See
+the penultimate paragraph of this section which discusses this
+more. As explained in the  <a class="reference internal" href="rework.html#rework"><em>Rework</em></a> section, the GUI module will
+not execute unless there is a existing support module. If the GUI code
+has been modified to include new callbacks then one shouldn&#8217;t expect
+the GUI code to execute until those callbacks have been incorporated
+in the support module.</p>
 <p>There are several buttons along the bottom of the window. They behave
 as follows:</p>
 <ul class="simple">
 <li>Save - Saves the contents of the upper text box into a file. It also saves the tcl files.</li>
-<li>Run - Attempts to execute the source module in the upper text
-box. It also saves the Python and the tcl files.</li>
+<li>Run - Attempts to execute the GUI source module.
+It also saves the Python and the tcl files.</li>
 <li>Close - Closes the Python console.</li>
 </ul>
 <p>The upper text box can be modified (edited) by selecting a character
@@ -249,13 +270,13 @@ reasonable colors for light backgrounds. One place you may have
 trouble is with quotes that bracketed by &#8216;&#8217;&#8217; or &#8220;&#8221;&#8221;. You should start
 a line with one of these delimiters and end a following line with one.</p>
 <p>The Run Button attempts a trial run on your GUI. If you have enough
-skeleton functions and there are no errors in the generated code, you
-should see the python code executed and the GUI window will
-appear. From there you close the Python window go back to PAGE and
-refine the GUI by moving widgets around, adding additional widgets,
-or changing attributes.</p>
+skeleton functions in the support module and there are no errors in
+the generated code, you should see the python code executed and the
+GUI window will appear. From there you close the Python window go back
+to PAGE and refine the GUI by moving widgets around, adding additional
+widgets, or changing attributes.</p>
 <p>A problem was reported when users attempt to resize the
-window. Changes made in PAGE 3.1 allow the window to gracefully
+window. Recent changes  allow the window to gracefully
 resize. This can be necessary if the screen resolution will not allow
 the entire window to be displayed. When the window is made smaller, it
 may appear to loose the Execution pane. However, it can be recovered
@@ -265,12 +286,12 @@ have been saved in ~/.pagerc and used when subsequently invoking the
 Python console including the placement of the sash. So invoke the
 Python console, resize it, re-position the sash quit PAGE, and restart
 PAGE to use the new Python console.</p>
-<p>Also, scroll wheel support in the Python console has been updated in
-PAGE 3.1.  To use the scroll wheel in Windows one must focus
-on the desired pane first.</p>
-<p>In earlier versions, the output from the execution was written to a
-file and then displayed in the bottom pane when execution
-terminated. With version 3.5, the Python execution on Linux now
+<p>Also, scroll wheel support in the Python console works.  To use the
+scroll wheel in Windows one must focus on the desired pane
+first. Finally, when the Python Console is in focus, Control-p and
+Control-i will have the effect of generating the GUI module and the
+supporting module respectively.</p>
+<p>Execution of the python module  on Linux
 communicates with the console through pipes; thus output from the
 execution now appears immediately in the Execution Output pane.
 Coupled with a recent change which embeds a print statement in the
@@ -280,7 +301,7 @@ Console, and selects the button, the name of the command will appear
 in the Execution Console.
 This is useful because no output from selecting the widget means that
 you have not defined a callback function. Unfortunately, on Windows
-the name of the command does not appear until the execution
+the this output does not appear until the execution
 terminates.</p>
 </div>
 <div class="section" id="color-dialog">
@@ -379,7 +400,7 @@ themes, I recommend that you stay with the tk default colors.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008,2009,2010,2011,2012,2013 Donald Rozenberg.
+        &copy; Copyright 2008 - 2014 Donald Rozenberg.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

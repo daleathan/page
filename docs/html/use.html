@@ -120,7 +120,9 @@ Python module which implements the application interface.</p>
 <p>One uses PAGE to generate a GUI as follows:</p>
 <ul class="simple">
 <li>Start PAGE by executing &#8220;page&#8221; or activating the PAGE icon on
-the windows desktop.</li>
+the Windows desktop. In windows one may also start PAGE from the
+command line by going to the installation directory and executing
+winpage.bat.</li>
 <li>Bring up the new top window by selecting the
 top left button in the widget toolbar.</li>
 <li>Drag the toplevel window to where you want it.</li>
@@ -686,6 +688,13 @@ because I load the PAGE version with the word Scrolled.</p>
 control with Button-1. The scrollbars are ttk::scrollbar widgets which
 appear only when needed, i. e., when an item extends beyond the
 allotted space.</p>
+<p>When inserting test inside a Scrolledtext widet, one seems to treat it
+like a text widget. For example one uses
+code like</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Scrolledtext1</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">END</span><span class="p">,</span> <span class="s">&quot;This is text to be inserted&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="tnotebook">
 <h3>TNotebook<a class="headerlink" href="#tnotebook" title="Permalink to this headline">¶</a></h3>
@@ -955,6 +964,8 @@ you will be presented with a window with which to specify the tcl file
 name, the root of which will be used for the python file name.  The
 tcl file can be used as an argument to PAGE allowing one to later
 pickup where he left off.</p>
+<p>Execution of the Python GUI is caused by either selecting the &#8220;Run&#8221;
+button at the bottom of the Python GUI or by typing Control-R.</p>
 <p>The function &#8220;init&#8221; is the place to initial things after the GUI
 is mapped.</p>
 </div>
@@ -1227,7 +1238,7 @@ code at the python level.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008,2009,2010,2011,2012,2013 Donald Rozenberg.
+        &copy; Copyright 2008 - 2014 Donald Rozenberg.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

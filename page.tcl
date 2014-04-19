@@ -1,4 +1,4 @@
-##!/bin/tclsh
+#!/bin/tclsh
 # the next line restarts using wish\
 
 # Rozen Don't think that the following line is needed or desirable.
@@ -15,7 +15,7 @@
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# of the License, or (at your option) any later version
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -151,12 +151,12 @@ proc ::vTcl::load_bwidgets {} {
 proc vTcl:setup {} {
     global tk_strictMotif env vTcl tcl_platform __vtlog
     global tcl_version
+    global vTcl
     if {$env(VTCL_HOME) == ""} {
         set vTcl(VTCL_HOME) [pwd]
     } else {
         set vTcl(VTCL_HOME) $env(VTCL_HOME)
     }
-
     set version [file join $vTcl(VTCL_HOME) version]
     source $version
     set vTcl(tcl_version) $tcl_version
@@ -231,7 +231,6 @@ proc vTcl:setup {} {
     vTcl:setup_gui
     set ::argc $argc
     set ::argv $argv
-
     update idletasks
     set vTcl(start,procs)   [lsort [info procs]]
     set vTcl(start,globals) [lsort [info globals]]
@@ -253,6 +252,14 @@ proc vTcl:setup_gui {} {
     global vTcl tcl_platform tk_version
 
     rename exit vTcl:exit
+    #     switch $tcl_platform(platform) {
+    #         windows {
+    #             set vTcl(pr,font_dft) {{MS Sans Serif} 10}  ;# Rozen larger font
+    #         }
+    #         default {
+    #             set vTcl(pr,font_dft) {Helvetica 12}      ;# Rozen larger font
+    #         }
+    #     }
 
     vTcl:splash_status "Setting Up Workspace"
     ## We use our own version of Bwidgets with some bug fixes. Will
@@ -359,8 +366,12 @@ option add *vTcl*Button*activebackground "#f4bcb2"
     }
     vTcl:toolbar_reflow
     foreach i $vTcl(gui,showlist) {
+        # This loop creates initial windows from saved information in
+        # .pagerc
+
         if {$i == ".vTcl.py_console"} continue  ;# Rozen
-        Window show $i
+        if {$i == ".vTcl.about"} continue  ;# Rozen  Don't show abouut/
+        Window show $i    ;# Window is in vtcllib.tcl
     }
     vTcl:clear_wtree
 
@@ -377,7 +388,7 @@ proc vTclWindow.vTcl {args} {
     wm title $vTcl(gui,main) "PAGE"  ;# Rozen
     wm resizable $vTcl(gui,main) 0 0
     wm group $vTcl(gui,main) $vTcl(gui,main)
-    wm command $vTcl(gui,main) "$vTcl(VTCL_HOME)/vtcl"
+    wm command $vTcl(gui,main) "$vTcl(VTCL_HOME)/page"
     wm iconname $vTcl(gui,main) "PAGE"   ;# Rozen
     if {$tcl_platform(platform) == "macintosh"} {
         wm geometry $vTcl(gui,main) +0+20
@@ -403,7 +414,7 @@ proc vTclWindow.vTcl {args} {
     # but gen_Python definitely does.  Perhaps I do want to use the
     # compound stuff.
     foreach menu {file edit
-                       options window widget gen_Python} {
+                       options window widget gen_Python help} {
         if {$tcl_version >= 8} {
             vTcl:menu:insert .vTcl.m.$menu $menu .vTcl.m
         #} else {
@@ -808,7 +819,7 @@ proc vTcl:main {argc argv} {
     ## init the bindings editor
     ::widgets_bindings::init
 
-    vTcl:splash_status "              vTcl Loaded" -nodots
+    vTcl:splash_status "              PAGE Loaded" -nodots
     after 1000 {if {[winfo exists .x]} {destroy .x}}
     ## load file passed in command line, get rid of splash window right here
     if {$file != ""} {

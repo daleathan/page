@@ -58,6 +58,7 @@ def paste():
 def quit():
         print ('menu_support.quit')
         sys.stdout.flush()
+        sys.exit()
 
 def radio_a():
         print ('menu_support.radio_a')

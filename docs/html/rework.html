@@ -88,16 +88,23 @@ realizing the application is written. &#8220;&lt;name&gt;&#8221; is the applicat
 selected by the user when the system saves the &#8221;.tcl&#8221; or extracted
 from the file name which may be supplied when invoking PAGE.</p>
 <p>Thus, one may alter the &#8220;&lt;name&gt;.py&#8221; using PAGE without changing the
-&#8220;&lt;name&gt;_support.py&#8221;.  Of course, if the user changes the GUI and refer
+&#8220;&lt;name&gt;_support.py&#8221;.  Of course, if the user changes the GUI to refer
 to new callback functions or Tkinter variables, then those will have to be
 manually added to the support module. The style of the skeleton
 functions and TK variable additions is pretty simple so that they are
 easy to add manually.</p>
+<p>Generation of either Python module will probably attempt to save the
+tcl file and in do so may ask if you really want to save it. If you do
+not answer &#8220;yes&#8221; the root file name may not be known and bad code will
+be generated.</p>
 <p>Let me repeat: You should only generate the support module once; otherwise
 any code which you added will be lost.  Well, just in case you do that
 inadvertently, PAGE will save some previous versions as backups.  If
 you add new features specifying new callback functions or new Tk
-variables you will have to add them manually to the supporting module.</p>
+variables you will have to add them manually to the supporting module.
+Also, when saving the support module it will test to see if a support
+module with the same name exists and if it does, it will question the
+user as to whether he wishes to continue.</p>
 <p>See the WCPE directory in the examples directory.  This is a program
 that displays the program of WCPE which is one of my favorite
 classical music stations.  In this example all of the functional code
@@ -121,6 +128,102 @@ several examples, some of which are included in the section on
 examples, I worry that I have overlooked something big.  So if you
 find any problems or oversights, please let me know.</p>
 </div>
+<div class="section" id="automatic-saving-of-modules">
+<h1>Automatic Saving of Modules<a class="headerlink" href="#automatic-saving-of-modules" title="Permalink to this headline">¶</a></h1>
+<p>One possibly confusing aspect of PAGE is the saving of the three files
+associated with a PAGE GUI:</p>
+<ul class="simple">
+<li>The tcl file which is the input to the &#8220;working&#8221; file of PAGE.</li>
+<li>The Python code generated defining the GUI object.</li>
+<li>The Python support file containing much of the boiler plate and skeleton functions.</li>
+</ul>
+<p>As stated elsewhere the root name is derived from the name of the tcl
+file. The Python GUI root name is the same as that of the tcl file and
+the Python support module is that root name concatenated with &#8220;_support&#8221;.</p>
+<p>There are several mechanisms for saving. In addition as noted in the
+last section, if one attempts to save a support module and one exists,
+PAGE will inquire whether to con tine the save.  This is a feature
+which might protect a manually coded module.</p>
+<div class="section" id="save-command-in-the-menu">
+<h2>Save Command in the Menu<a class="headerlink" href="#save-command-in-the-menu" title="Permalink to this headline">¶</a></h2>
+<p>When File-&gt;Save or File-&gt;Save As is selected then the tcl file is
+saved provided the GUI has changed since the last save action. The
+previous version of the tcl file is made a backup file.</p>
+</div>
+<div class="section" id="save-button-in-the-python-console">
+<h2>Save Button in the Python Console<a class="headerlink" href="#save-button-in-the-python-console" title="Permalink to this headline">¶</a></h2>
+<p>When the Save button in the Console file is selected, the tcl file is
+saved as above if there has been a change to GUI. Also, the content of
+the top window of the Python Console is saved if it is different from
+the last version of the code was saved.  That is, if the Python
+console contains GUI code then the GUI module will be saved if it has
+been modified since the last safe of the GUI code in the current PAGE
+invocation. Similarly for the case of the support module being in the
+Python Console.  The Python modules will create backups of existing
+corresponding modules.</p>
+</div>
+<div class="section" id="run-button-in-the-python-console">
+<h2>Run Button in the Python Console<a class="headerlink" href="#run-button-in-the-python-console" title="Permalink to this headline">¶</a></h2>
+<p>When the Run button is selected the code in the Python Console will be
+saved if it differs from the last save in the current invocation of
+PAGE. This is necessary because the code is execute by invoking the
+Python Interpreter against the saved file.  Running the Python GUI
+code will show the actual GUI. If the Run button is selected then the
+GUI program will be executed.  Obviously it will fail if there is no
+support module.</p>
+<p>The logic which I have implemented is fairly complex; I have included
+below the code which is part of PAGE.</p>
+<div class="highlight-python"><pre>proc vTcl:test_file_content {filename new_content} {
+    # Function to determine if we can safely skip the save function.
+    # A return value of 0 means that we can skip the actual save.
+    # A return value of 1 means that we must save.
+    global vTcl
+    set save 1
+    set skip 0
+    # If the Python file does not exist, we clearly have to save it.
+    if {[file exists $filename] == 0} {
+        return $save
+    }
+    # If we have edited the Python Console code window, we have to save.
+    set modified [$vTcl(code_window) edit modified]
+    if {$modified} {
+        return $save
+    }
+    # If the content of the code window is unchanged, we can skip the save.
+    if {$new_content == $vTcl(last_save,$vTcl(python_module))} {
+        return $skip     ;# Skip the save.
+    }
+    # If we got this far then we want to save.
+    return $save     ;# Do the save.
+
+}</pre>
+</div>
+<p>Note that every time that the Python code for either the GUI or the
+support module is generated the new module will include a current
+timestamp and so comparing will two generations will always differ if
+only in the timestamps. Without the timestamps I could probably reduce
+the number of saves and backup files, but I think the timestamps are
+very valuable.</p>
+</div>
+<div class="section" id="automatic-save-at-code-generation">
+<h2>Automatic Save at Code Generation<a class="headerlink" href="#automatic-save-at-code-generation" title="Permalink to this headline">¶</a></h2>
+<p>When code has been generated by either Control-i for Control-p, the
+tcl code for the GUI will be saved if it has changed.  Code for the
+Support module is automatically saved also because it may not be the
+case that one would attempt to execute that module for reasons given
+above. The Python code for the GUI is also saved upon generation.</p>
+<p>Prior to version 4.2.3, the Python code for the GUI was not saved
+unless the user selected the Save or Run buttons on the Python
+Console. For consistency, now both the GUI and the support modules are
+saved upon generation.</p>
+</div>
+<div class="section" id="automatic-save-at-page-exit">
+<h2>Automatic Save at PAGE Exit<a class="headerlink" href="#automatic-save-at-page-exit" title="Permalink to this headline">¶</a></h2>
+<p>When PAGE is closed by either Quit, Control-q, or Control-c, the save
+action is the same as for the File-&gt;Save.  Only changes to the GUI tcl
+file is changed.</p>
+</div>
+</div>
 
 
           </div>
@@ -128,6 +231,19 @@ find any problems or oversights, please let me know.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Rework</a></li>
+<li><a class="reference internal" href="#automatic-saving-of-modules">Automatic Saving of Modules</a><ul>
+<li><a class="reference internal" href="#save-command-in-the-menu">Save Command in the Menu</a></li>
+<li><a class="reference internal" href="#save-button-in-the-python-console">Save Button in the Python Console</a></li>
+<li><a class="reference internal" href="#run-button-in-the-python-console">Run Button in the Python Console</a></li>
+<li><a class="reference internal" href="#automatic-save-at-code-generation">Automatic Save at Code Generation</a></li>
+<li><a class="reference internal" href="#automatic-save-at-page-exit">Automatic Save at PAGE Exit</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="use.html"
                         title="previous chapter">Using PAGE</a></p>
@@ -172,7 +288,7 @@ find any problems or oversights, please let me know.</p>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008,2009,2010,2011,2012,2013 Donald Rozenberg.
+        &copy; Copyright 2008 - 2014 Donald Rozenberg.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

@@ -75,6 +75,8 @@ you code that will work.</p>
 could not find nearly enough examples. Another way of looking at PAGE
 is to consider it to be a Tkinter example builder which can build the
 examples you need to see.</p>
+<p>The author is Donald Rozenberg and project page for PAGE is
+<a class="reference external" href="http://page.sourceforge.net/">http://page.sourceforge.net/</a>.</p>
 <div class="section" id="change-history">
 <h2>Change History<a class="headerlink" href="#change-history" title="Permalink to this headline">¶</a></h2>
 <p>The 3.0 release was a major revision of PAGE initiated because of the
@@ -104,80 +106,6 @@ transparent manner.</li>
 recourse to the Tix package or other packages, resulting in a great
 simplification of the installation process, particularly installation
 on Windows.</p>
-<p>The 3.1 release contains important updates to the Python console which
-will allow a more graceful resizing of the Python console window.</p>
-<p>The 3.2 release contains provides several usability improvements:</p>
-<blockquote>
-<div><ul class="simple">
-<li>A new facility for users to define widget Aliases which can make the
-resulting code much more readable.</li>
-<li>Important bug fixes have been incorporated. Some of these relate
-to resizing buttons and labels. Another to font specification.</li>
-<li>Also, a slightly different approach to multi-window applications is
-supported. Related changes have been made to the documentation.</li>
-<li>It has become apparent that better support for themed paned
-windows was required.  It is now more straightforward to add
-additional panes and for changing sash positions by dragging the
-edge of a pane within PAGE.</li>
-<li>I have figured out how to provide significantly improve support
-for the Scrolledtree widget.  One can now easily add, delete and
-reorder columns and edit their configurations.</li>
-<li>Heretofore, PAGE has made available an undo/redo facility
-provided by Vtcl; however, it is now clear that the feature is
-pretty weak and liable to cause more user problems than help, so
-I am disabling it until I can strengthen it. It also appears
-that the Cut-Copy-Paste mechanism is less than it should be; it
-also is being disabled until I can significantly improve it.</li>
-<li>The example vrex, a program for testing Python regular
-expressions, has been improved as a useful program and as an
-example of what can easily be done with scrolled text windows and
-paned windows.</li>
-</ul>
-</div></blockquote>
-<p>In building 3.2, I received very helpful suggestions from Greg Walters,
-Berwyn Hoyt, and Peter Kessler.</p>
-<p>The 3.3 release contains the following enhancements:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Bugs in the menu bar creation mechanism have been fixed. Thanks to a
-bug report from Jo, Hyun-Joon which caused me to look again at
-the whole process and hopefully improve it.</li>
-<li>As a result of reworking the menu bar code, I decided that it
-would be of value to add separate defaults for menu fonts and
-background and foreground colors.  That resulted in changes to
-PAGE preferences.  This unfortunately resulted in substantial
-changes to the code.</li>
-<li>To aid in debugging my changes, I changed the content of
-automatically generated functions from being merely a pass
-statement allowing the generated python code to execute (while
-doing nothing) to a print statement which displays the name of
-the function when a button, menu entry, etc. is selected when
-running the generated GUI. Not much but better than nothing.</li>
-<li>The menubutton widget also needs a serious review but I have
-decided to postpone that until the next release which I hope
-will be soon. It seemed important to release the new menu bar
-improvements as soon as possible. For now, I recommend avoiding
-menubutton widgets.</li>
-</ul>
-</div></blockquote>
-<p>The 3.4 release contains the following enhancements:</p>
-<blockquote>
-<div><ul class="simple">
-<li>A Cut-Copy-Paste facility.</li>
-<li>An epub version of the documentation named &#8220;PAGE.epub&#8221;.</li>
-<li>Support for the Spinbox widget.</li>
-</ul>
-</div></blockquote>
-<p>The 3.5 release contains the following enhancements:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Better support for OS X and the Scale and TScale widgets.</li>
-<li>Better support for Toplevel widgets. You can now change
-attributes background and cursor, for example.</li>
-<li>Replaced a very old and modified version of BWidgets.</li>
-<li>Corrected a number of bugs.</li>
-</ul>
-</div></blockquote>
 <p>The 4.0 release contains sufficient advances including:</p>
 <blockquote>
 <div><ul class="simple">
@@ -206,6 +134,10 @@ attributes background and cursor, for example.</li>
 fairly extensive departure from the previous workings of
 PAGE. Additional examples were added to illustrate some aspects of the
 rework scheme.</p>
+<p>The 4.2.2. release adds a Help menu to the main menu and can open the
+html documentation in the default browser.  Also, some window titles
+have been cleaned up.</p>
+<p>The 4.2.3 release corrects the bugs with saving files and makes that process more regular.</p>
 </div>
 <div class="section" id="review-of-x-window-concepts">
 <h2>Review of X Window Concepts<a class="headerlink" href="#review-of-x-window-concepts" title="Permalink to this headline">¶</a></h2>
@@ -339,14 +271,17 @@ including the names of callback functions. It is probably a good
 idea to provide an alias which will make the generated code easier
 to read.</li>
 <li>Repeat the above step (2) until the GUI is complete.</li>
-<li>The remaining step is to generate the Python code in a new python
-file with the same rootname as the &#8220;tcl&#8221; file. This is done by
-selecting &#8216;Gen_Python&#8217; in the menu bar of the main window and
-generating the Python code. You will see a new window, the Python
-console where the code can be expected to appear. Save the
-code. Execute the code, if you have generated both the GUI module
-and the related support module, to preview the GUI. It only
-shows the GUI, it is not the complete application.</li>
+<li>The remaining step is to generate the Python code in new python
+files with the same root name based on the root name the &#8220;tcl&#8221;
+file. This is done by selecting commands &#8216;Gen_Python&#8217; in the
+submenu in the menu bar of the main window and generating the
+Python code. Two Python files are required the Python file for the
+GUI and the Python support module containing callback functions,
+etc.. You will see a new window, the Python console where
+the code can be expected to appear. Save the code. Execute the
+code, if you have generated both the GUI module and the related
+support module, to preview the GUI. It only shows the GUI, it is
+not the complete application.</li>
 <li>Create the necessary Python functions to realize the function of
 the application.  PAGE will facilitate this by generating skeleton
 functions for any functions named as callback functions in command
@@ -558,12 +493,15 @@ installer for the most recent version of Python and install it.  If
 you install 2.7 or later, or 3.1 or later you will be fine.</li>
 <li>Download page-4.x.x.exe and execute it.</li>
 </ol>
-<p>winpage.bat is the analog to the &#8220;page&#8221; script mentioned above. You
-may want to include the page directory in your path. winpage.bat is a
-one line file containing:</p>
-<p>wish.exe c:\page\page.tcl %1</p>
-<p>If you put PAGE in a location other than c:page, please modify the
-above line to reflect the correct location of page.tcl.</p>
+<p>winpage.bat is the analog to the &#8220;page&#8221; script mentioned
+above. winpage.bat is a one line file containing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wish</span><span class="o">.</span><span class="n">exe</span> <span class="n">page</span><span class="o">.</span><span class="n">tcl</span> <span class="o">%</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>With Version 4.2.2, it is now feasible to install PAGE in any
+directory and have the icon start the program.  This has been tested
+on a very old machine running XP.  The default directory for
+installation is C:\page.</p>
 </div>
 <div class="section" id="installation-on-os-x">
 <h3>Installation on OS X<a class="headerlink" href="#installation-on-os-x" title="Permalink to this headline">¶</a></h3>
@@ -652,7 +590,7 @@ ActiveTcl and Python.</li>
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008,2009,2010,2011,2012,2013 Donald Rozenberg.
+        &copy; Copyright 2008 - 2014 Donald Rozenberg.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
